@@ -1,0 +1,6 @@
+-- Add extensions for Geospatial analysis
+CREATE EXTENSION IF NOT EXISTS postgis;
+--CREATE EXTENSION IF NOT EXISTS pgrouting;
+--CREATE EXTENSION IF NOT EXISTS btree_gist;
+--CREATE EXTENSION IF NOT EXISTS pg_prewarm;
+--CREATE EXTENSION IF NOT EXISTS tablefunc;
