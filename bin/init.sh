@@ -17,18 +17,19 @@ exec 1> >(tee -a $LOGS/$(date +'%Y%m%d').log) 2>&1
 readonly _DEBUG=${_DEBUG:-"on"}
 readonly ENVTYPE=${ENVTYPE:-"prod"}
 readonly RUNID=${RUNID:-$(date +%Y%m%d%H%M%S)}
-readonly tmpFOLDER=${tmpFOLDER:-"/tmp/cfh003"}
+readonly tmpFOLDER=${tmpFOLDER:-"/tmp/pia-unauthorised-use"}
 
 PREPDB=false
 FUNCS=false
-ROADS=false
-PREMISES=false
 PUBLIC=false
-STATE=false
+# ROADS=false
+# PREMISES=false
+# PUBLIC=false
+# STATE=false
 ################################################################################
 # Load utility functions
 ################################################################################
-source $PROJECTPATH/bin/utilities.sh
+source $PIA_PROJECTPATH/bin/utilities.sh
 
 cores=`nproc`
 #======================= SCRIPT LOGIC STARTS HERE ==============================
@@ -39,9 +40,9 @@ function prepareDB() {
     INFO "prepareDB Started"
     DEBUG set -o verbose;
     INFO "Adding required PostgreSQL extensions"
-    pgsql --file=$PROJECTPATH/sql/01.database/extensions.sql
+    pgsql --file=$PIA_PROJECTPATH/sql/01.database/extensions.sql
     INFO "Creating the necessary schemas if they don't already exist"
-    pgsql --file=$PROJECTPATH/sql/01.database/schema.sql
+    pgsql --file=$PIA_PROJECTPATH/sql/01.database/schema.sql
     DEBUG set +o verbose;
     INFO "prepareDB Finished"
 }
@@ -53,26 +54,11 @@ function addPsqlFunctions() {
     INFO "addPsqlFunctions Started"
     DEBUG set -o verbose;
     
-    pgsql --file=$PROJECTPATH/sql/01.database/function.sql
+    pgsql --file=$PIA_PROJECTPATH/sql/01.database/function.sql
     DEBUG set +o verbose;
     INFO "addPsqlFunctions Finished"
 }
 
-function createPublicRoads() {
-    # Creates the Data Model. Order is Extremly Important!
-    # Globals: PROJECTPATH, PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD
-    # Arguments: None
-    # Output: roads, roads_vertices_pgr
-    INFO "createPublicRoads Started"
-    DEBUG set -o verbose;
-    pgsql --file=${PROJECTPATH}/sql/02.data_model/02.public/roads.sql
-    DEBUG set +o verbose;
-    INFO "createPublicRoads Finished"
-}
-
-function createPublicPremises() {
-    pgsql --file=$PROJECTPATH/sql/02.data_model/02.public/premises.sql
-}
 
 function createPublicDM() {
     # Creates the Data Model. Order is Extremly Important!
@@ -93,8 +79,6 @@ function main() {
     DEBUG set -o verbose;
     if $PREPDB; then prepareDB; fi
     if $FUNCS; then addPsqlFunctions; fi
-    if $ROADS; then createPublicRoads; fi
-    if $PREMISES; then createPublicPremises; fi
     if $PUBLIC; then createPublicDM; fi
     DEBUG set +o verbose;
 }

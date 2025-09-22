@@ -42,7 +42,7 @@ RAW=false
 ################################################################################
 # Load utility functions
 ################################################################################
-source $PROJECTPATH/bin/utilities.sh
+source $PIA_PROJECTPATH/bin/utilities.sh
 
 
 function loadRaw() {
@@ -57,8 +57,8 @@ function loadRaw() {
 
 
     # CF ducts
-    pgsql --file=${PROJECTPATH}/sql/02.data_model/pia_raw/cf_ducts.sql
-    pgsql --command="\copy pia_raw.cf_ducts from '${DATAPATH}/cf_ducts_from_excel.csv' WITH CSV HEADER"
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_ducts.sql
+    pgsql --command="\copy pia_raw.cf_ducts from '${PIA_DATAPATH}/cf_ducts_from_excel.csv' WITH CSV HEADER"
 
     # CF poles
 
@@ -90,176 +90,29 @@ function loadRaw() {
 
 
 
-function loadPublic() {
-    # mapping tables between counties and states
-    INFO "Loading county and state mapping code"
-    pgsql --command="\copy county_code FROM '$DATAPATH/code_mapping/county_code.csv' WITH header csv encoding 'windows-1251'"
-    pgsql --command="UPDATE county_code SET tag = replace(tag, 'c', ''), county = replace(lower(county), ' ','')"
+# function loadPublic() {
+#     # mapping tables between counties and states
+#     INFO "Loading county and state mapping code"
+#     pgsql --command="\copy county_code FROM '$DATAPATH/code_mapping/county_code.csv' WITH header csv encoding 'windows-1251'"
+#     pgsql --command="UPDATE county_code SET tag = replace(tag, 'c', ''), county = replace(lower(county), ' ','')"
     
-    pgsql --command="\copy state_code FROM '$DATAPATH/code_mapping/state_code.csv' WITH header csv encoding 'windows-1251'"
-    pgsql --command="UPDATE state_code SET tag = replace(tag, 's', ''), state = replace(lower(state), ' ','')"
-}
+#     pgsql --command="\copy state_code FROM '$DATAPATH/code_mapping/state_code.csv' WITH header csv encoding 'windows-1251'"
+#     pgsql --command="UPDATE state_code SET tag = replace(tag, 's', ''), state = replace(lower(state), ' ','')"
+# }
 
-function loadStateSchema(){
-    # we have a separate DB schema for each state
-    # this function sets up their data models, and copies
-    # the state-specific data from the public schema to the state schema
 
-    stateList=$DATAPATH/state_list.csv
-    row=`wc -l < $DATAPATH/state_list.csv`
-    r=1
-    while [ $r -le $row ];
-    do
-        j=1
-        while [ $j -le $cores ];
-        do
-            if [ $r -le $row ]; then
-                state=`awk "NR==$r" $stateList`
-                pgsql --file=$PROJECTPATH/sql/04.analysis/01.popuplate_individual_state_data.sql --set schema=$state --set state_name="'$state'" &
-            fi
-            ((j++))
-            ((r++))
-        done
-        # allow to execute up to $N jobs in parallel
-        # echo $(jobs -r -p | wc -l)
-        wait $!
-    done
-    wait $!
-}
 
-function update2020Census(){
-    # update to 2020 census info from 2010 - not needed in a fresh execution
 
-    stateList=$DATAPATH/state_list_full.csv
-    row=`wc -l < $DATAPATH/state_list_full.csv`
-    r=1
-    while [ $r -le $row ];
-    do
-        j=1
-        while [ $j -le $cores ];
-        do
-            if [ $r -le $row ]; then
-                state=`awk "NR==$r" $stateList`
-                pgsql --file=$PROJECTPATH/sql/05.adhoc/update_census_2020_per_state.sql --set schema=$state --set state_name="'$state'" &
-            fi
-            ((j++))
-            ((r++))
-        done
-        # allow to execute up to $N jobs in parallel
-        # echo $(jobs -r -p | wc -l)
-        wait $!
-    done
-    wait $!
-}
-
-function loadStateCandidates(){
-    # for each state, work out the set of things that need to be connected
-    # in order to build the network
-    # we aim to execute for multiple states in parallel
-    stateList=$DATAPATH/state_list_full.csv
-    row=`wc -l < $DATAPATH/state_list_full.csv`
-    r=1
-    while [ $r -le $row ];
-    do
-        j=1
-        while [ $j -le $cores ];
-        do
-            if [ $r -le $row ]; then
-                state=`awk "NR==$r" $stateList`
-                # this inserts pairs of objects (e.g. each premises with its related Distribution Point)
-                # into a table named either 'pgr_candidate_access' (for access network), or 'pgr_candidate_census'
-                # for spine network
-                pgsql --file=$PROJECTPATH/sql/04.analysis/02.populating_route_candidate.sql --set schema=$state &
-            fi
-            ((j++))
-            ((r++))
-        done
-        # allow to execute up to $N jobs in parallel
-        # echo $(jobs -r -p | wc -l)
-        wait $!
-    done
-    wait $!
-}
-
-function routes(){
-    # do the routing for a specific state
-    # we do two calls each for access and census (spine)
-    # the first one finds the road distance between the candidate pairs
-    # the second one attempts to optimise the routing, by:
-    # 1. routing again, with the pair with the shortest road distance first
-    # 2. adjusting the road cost after each candidate pair, reducing costs of roads that have already
-    # been used - this is done using a counter table which records how often each road is used
-
-    python3 -u $PROJECTPATH/sql/04.analysis/04.routes.py --schema=$@ --type=access -c 
-    python3 -u $PROJECTPATH/sql/04.analysis/04.routes.py --schema=$@ --type=access -o 
-    python3 -u $PROJECTPATH/sql/04.analysis/04.routes.py --schema=$@ --type=census -c 
-    python3 -u $PROJECTPATH/sql/04.analysis/04.routes.py --schema=$@ --type=census -o 
-}
-
-function loadRoutes(){
-    # loop round all the states one by one, calling the 'routes' function on each in turn
-    # to do the routing
-    stateList=$DATAPATH/state_list_full.csv
-    row=`wc -l < $DATAPATH/state_list_full.csv`
-    r=1
-    while [ $r -le $row ];
-    do  
-        state=`awk "NR==$r" $stateList`
-        INFO "Routing $state"
-	    routes $state
-
-        # drop the counter tables that are used to reduce the cost of going down a road twice
-        pgsql --command="SELECT drop_tables('pgr_counter%', '$state')"
-        ((r++))
-    done
-    wait $!
-}
-
-function updateRoadTractCode(){
-    # in the state road tables, we note a census tract id for each road
-    stateList=$DATAPATH/state_list_full.csv
-    row=`wc -l < $DATAPATH/state_list_full.csv`
-    r=1
-    while [ $r -le $row ];
-    do  
-        state=`awk "NR==$r" $stateList`
-        INFO "Updating census tract mappings for roads in $state"
-	#routes $state
-        pgsql --file=$PROJECTPATH/sql/05.adhoc/update_road_track_code.sql --set schema=$state &t
-        ((r++))
-    done
-    wait $!
-}
 
 function main() {
     # calls the appropriate function based on the command line parameters
     # in principle, 'ALL' should do everything we need in the correct order
     INFO "Main"
     if $ALL; then
-        loadRoads
-        loadBlock
-        loadTrack
-        loadUSBuilding
-        loadParameters
-        loadPublic
-        loadStateSchema
-        loadStateCandidates
-        loadRoutes
+        loadRaw
     fi
-    if $ROADS; then loadRoads; fi
-    if $BLOCK; then loadBlock; fi
-    if $BLOCK2022; then loadBlock2022; fi    
-    if $TRACK; then loadTrack; fi
-    if $TRACK2022; then loadTrack2022; fi    
-    if $PREMISES; then loadUSBuilding; fi	
-    if $PARAMETERS; then loadParameters; fi
+    if $RAW; then loadRaw; fi
     if $PUBLIC; then loadPublic; fi
-    if $STATE; then loadStateSchema; fi
-    if $UPDATE2020; then update2020Census; fi
-    if $CANDIDATE; then loadStateCandidates; fi
-    if $ROUTE; then loadRoutes; fi    
-    if $UPDATEROADTRACT; then updateRoadTractCode; fi
-    if $BUSINESS; then loadUSBusinesses; fi
 }
 
 #======================== SCRIPT LOGIC ENDS HERE ===============================
@@ -294,20 +147,7 @@ while [ "$#" -gt 0 ]; do
     '--port='*)     		PGHOST="${1#*=}"     	;;
     '--all')     		    ALL=true     	        ;;
     '--raw')				RAW=true			 	;;
-    '--roads')				ROADS=true				;;
-    '--prems')              PREMISES=true           ;;
     '--public')				PUBLIC=true				;;
-    '--block')              BLOCK=true              ;;
-    '--block2022')          BLOCK2022=true          ;;    
-    '--track')              TRACK=true              ;;
-    '--track2022')          TRACK2022=true          ;;    
-    '--state')              STATE=true              ;;
-    '--cand')              CANDIDATE=true              ;;
-    '--route')              ROUTE=true              ;;
-    '--update2020')         UPDATE2020=true         ;;
-    '--updateRoadTract')    UPDATEROADTRACT=true    ;;
-    '--parameters')         PARAMETERS=true         ;;
-    '--business')           BUSINESS=true           ;;
     '--help')       		help                 	;;
     -h)             		help                 	;;
     *)
