@@ -11,12 +11,12 @@ CREATE TABLE IF NOT EXISTS pia_raw.cf_lead_ins (
   "QUANTITY"                       INTEGER,
   "POLETBCINVOKED"                 TEXT,      -- 'Y'/'N' as provided
   "ROUTEID"                        INTEGER,
-  "EFFECTIVE_DT"                   TIMESTAMP WITHOUT TIME ZONE,
+  "EFFECTIVE_DT"                   TEXT,
   "SHAPE"                          TEXT,      -- WKT POINT
-  "MODIFIED_DT"                    TIMESTAMP WITHOUT TIME ZONE,
+  "MODIFIED_DT"                    TEXT,
   "ACTION"                         TEXT,      -- e.g., 'I'
   "CREATED_DT"                     DATE,
-  "LAST_UPDATE_DT"                 TIMESTAMP WITHOUT TIME ZONE,
+  "LAST_UPDATE_DT"                 TEXT,
   "REQUESTSOURCE"                  TEXT,
   "Effcet till created Lag Time"   NUMERIC(14,4),
   "NOI Status"                     TEXT--,
