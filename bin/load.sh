@@ -68,10 +68,17 @@ function loadRaw() {
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_lead_ins.sql
     pgsql --command="\copy pia_raw.cf_lead_ins from '${PIA_DATAPATH}/cf_lead_ins_from_excel.csv' WITH CSV HEADER"
 
-
     # CF ducts poles combined
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_ducts_and_poles.sql
     pgsql --command="\copy pia_raw.cf_ducts_and_poles from '${PIA_DATAPATH}/cf_ducts_poles_combined_from_excel.csv' WITH CSV HEADER"
+
+    # CF NOI requests submitted via portal
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_noi_portal.sql
+    pgsql --command="\copy pia_raw.cf_noi_portal from '${PIA_DATAPATH}/NOI_CityFibre_Portal_Sunderland.csv' WITH CSV HEADER"
+
+     # CF NOI requests submitted manually
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_noi_manual.sql
+    pgsql --command="\copy pia_raw.cf_noi_manual from '${PIA_DATAPATH}/SUN_NOIs_Old_Tracker.csv' WITH CSV HEADER"
   
     # INFO "Loading BDUK and Ofcom Markets"
     # pgsql --file=${PROJECTPATH}/sql/data_model/raw/bduk_f20_bins.sql
@@ -113,6 +120,15 @@ function loadPublic() {
     # ducts and poles combined
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_ducts_and_poles.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_ducts_and_poles.sql
+
+    # NOI requests submitted via portal
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_noi_portal.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_noi_portal.sql
+
+    # NOI requests submitted manually
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_noi_manual.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_noi_manual.sql
+
 
 
 #     # mapping tables between counties and states
