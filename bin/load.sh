@@ -70,7 +70,8 @@ function loadRaw() {
 
 
     # CF ducts poles combined
-
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_ducts_and_poles.sql
+    pgsql --command="\copy pia_raw.cf_ducts_and_poles from '${PIA_DATAPATH}/cf_ducts_poles_combined_from_excel.csv' WITH CSV HEADER"
   
     # INFO "Loading BDUK and Ofcom Markets"
     # pgsql --file=${PROJECTPATH}/sql/data_model/raw/bduk_f20_bins.sql
@@ -108,6 +109,10 @@ function loadPublic() {
     # lead ins
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_lead_ins.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_lead_ins.sql
+
+    # ducts and poles combined
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_ducts_and_poles.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_ducts_and_poles.sql
 
 
 #     # mapping tables between counties and states
