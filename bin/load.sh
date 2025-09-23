@@ -62,7 +62,7 @@ function loadRaw() {
 
     # CF poles
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_poles.sql
-    pgsql --command="\copy pia_raw.cf_ from '${PIA_DATAPATH}/cf_poles_from_excel.csv' WITH CSV HEADER"
+    pgsql --command="\copy pia_raw.cf_poles from '${PIA_DATAPATH}/cf_poles_from_excel.csv' WITH CSV HEADER"
 
     # CF lead-ins
 
