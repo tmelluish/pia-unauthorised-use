@@ -1,6 +1,6 @@
 -- Create table (quotes preserve your exact header names)
 CREATE TABLE IF NOT EXISTS pia_raw.cf_ducts (
-  "objectid"                        INTEGER PRIMARY KEY,
+  "objectid"                        INTEGER,
   "orreferenceid"                   TEXT NOT NULL,
   "customer_name"                   TEXT,
   "CP_OBJ"                          TEXT,

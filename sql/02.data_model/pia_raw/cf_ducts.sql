@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS pia_raw.cf_ducts;
 CREATE TABLE pia_raw.cf_ducts (
-  "objectid"                   INTEGER PRIMARY KEY,
+  "objectid"                   INTEGER,
   "orreferenceid"              TEXT NOT NULL,
   "customer_name"              TEXT,
   "CP_OBJ"                     TEXT,
