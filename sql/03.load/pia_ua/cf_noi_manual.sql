@@ -54,5 +54,6 @@ select
   "Attachments"                           ,  -- contains HTML anchors
   "Modified By"                           ,
   "Modified"                              ,
-  "Created"                               
+  "Created"                               ,
+  "Created By"
 from pia_raw.cf_noi_manual ;
