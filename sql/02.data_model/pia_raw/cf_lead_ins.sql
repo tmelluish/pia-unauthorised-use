@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS pia_raw.cf_lead_ins (
   "SHAPE"                          TEXT,      -- WKT POINT
   "MODIFIED_DT"                    TEXT,
   "ACTION"                         TEXT,      -- e.g., 'I'
-  "CREATED_DT"                     DATE,
+  "CREATED_DT"                     TEXT,
   "LAST_UPDATE_DT"                 TEXT,
   "REQUESTSOURCE"                  TEXT,
   "Effcet till created Lag Time"   NUMERIC(14,4),
