@@ -1,4 +1,5 @@
 -- Create table (quotes preserve your exact header names)
+DROP TABLE IF EXISTS pia_raw.cf_poles ;
 CREATE TABLE IF NOT EXISTS pia_raw.cf_poles (
   "objectid"                        INTEGER,
   "orreferenceid"                   TEXT NOT NULL,
