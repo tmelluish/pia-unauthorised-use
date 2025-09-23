@@ -61,6 +61,8 @@ function loadRaw() {
     pgsql --command="\copy pia_raw.cf_ducts from '${PIA_DATAPATH}/cf_ducts_from_excel.csv' WITH CSV HEADER"
 
     # CF poles
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_poles.sql
+    pgsql --command="\copy pia_raw.cf_ from '${PIA_DATAPATH}/cf_poles_from_excel.csv' WITH CSV HEADER"
 
     # CF lead-ins
 
@@ -90,7 +92,15 @@ function loadRaw() {
 
 
 
-# function loadPublic() {
+function loadPublic() {
+
+    # ducts
+    pgsql --file=${PROJECTPATH}/sql/03.load/pia_raw/cf_ducts.sql
+
+    # poles
+    pgsql --file=${PROJECTPATH}/sql/03.load/pia_raw/cf_poles.sql
+
+
 #     # mapping tables between counties and states
 #     INFO "Loading county and state mapping code"
 #     pgsql --command="\copy county_code FROM '$DATAPATH/code_mapping/county_code.csv' WITH header csv encoding 'windows-1251'"
@@ -98,7 +108,7 @@ function loadRaw() {
     
 #     pgsql --command="\copy state_code FROM '$DATAPATH/code_mapping/state_code.csv' WITH header csv encoding 'windows-1251'"
 #     pgsql --command="UPDATE state_code SET tag = replace(tag, 's', ''), state = replace(lower(state), ' ','')"
-# }
+}
 
 
 
