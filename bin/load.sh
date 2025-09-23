@@ -95,10 +95,12 @@ function loadRaw() {
 function loadPublic() {
 
     # ducts
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_ducts.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_ducts.sql
 
     # poles
-    pgsql --file=${PROJEPIA_PROJECTPATHCTPATH}/sql/03.load/pia_ua/cf_poles.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_poles.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_poles.sql
 
 
 #     # mapping tables between counties and states
