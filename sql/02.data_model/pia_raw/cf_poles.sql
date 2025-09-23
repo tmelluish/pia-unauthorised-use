@@ -14,8 +14,8 @@ CREATE TABLE IF NOT EXISTS pia_raw.cf_ducts (
   "shape"                           TEXT,            -- WKT POINT
   "bt_address_desc"                 TEXT,
   "customer_reference"              TEXT,
-  "start_dt"                        DATE,
-  "finish_dt"                       DATE,
+  "start_dt"                        TEXT,
+  "finish_dt"                       TEXT,
   "extension_count"                 INTEGER,
   "cancellation_reason"             TEXT,
   "noi_source"                      TEXT,

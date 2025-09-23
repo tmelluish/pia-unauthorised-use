@@ -14,8 +14,8 @@ CREATE TABLE pia_ua.cf_ducts (
   "type_name"                  TEXT,
   "shape"                      TEXT,             -- WKT LINESTRING as provided
   "customer_reference"         TEXT,
-  "start_dt"                   DATE,
-  "finish_dt"                  DATE,
+  "start_dt"                   TEXT,
+  "finish_dt"                  TEXT,
   "extension_count"            INTEGER,
   "cancellation_reason"        TEXT,
   "noi_source"                 TEXT,
