@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS pia_raw.cf_ducts_and_poles ;
 
 CREATE TABLE IF NOT EXISTS pia_raw.cf_ducts_and_poles (
-  "objectid"                    INTEGER PRIMARY KEY,
+  "objectid"                    INTEGER,
   "orreferenceid"               TEXT NOT NULL,
   "customer_name"               TEXT,
   "CP_OBJ"                      TEXT,
@@ -16,8 +16,8 @@ CREATE TABLE IF NOT EXISTS pia_raw.cf_ducts_and_poles (
   "shape"                       TEXT,           -- WKT: LINESTRING or POINT
   "bt_address_desc"             TEXT,
   "customer_reference"          TEXT,
-  "start_dt"                    DATE,
-  "finish_dt"                   DATE,
+  "start_dt"                    TEXT,
+  "finish_dt"                   TEXT,
   "extension_count"             INTEGER,
   "cancellation_reason"         TEXT,
   "noi_source"                  TEXT,
