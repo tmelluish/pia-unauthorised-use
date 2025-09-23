@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS pia_raw.cf_poles (
   "noi_source"                      TEXT,
   "noi_cp_created_by_email"         TEXT,
   "noi_cp_created_by_last_name"     TEXT,
-  "noi_cp_created_by_first_name"    TEXT,
+  "noi_cp_created_by_first_name"    TEXT
 
   -- Optional geometry column (coords look like British National Grid: EPSG:27700)
-  geom geometry(Point,27700)
+  --geom geometry(Point,27700)
 );
