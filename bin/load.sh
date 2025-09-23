@@ -65,6 +65,9 @@ function loadRaw() {
     pgsql --command="\copy pia_raw.cf_poles from '${PIA_DATAPATH}/cf_poles_from_excel.csv' WITH CSV HEADER"
 
     # CF lead-ins
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_lead_ins.sql
+    pgsql --command="\copy pia_raw.cf_lead_ins from '${PIA_DATAPATH}/cf_lead_ins_from_excel.csv' WITH CSV HEADER"
+
 
     # CF ducts poles combined
 
@@ -101,6 +104,10 @@ function loadPublic() {
     # poles
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_poles.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_poles.sql
+
+    # lead ins
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_lead_ins.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_lead_ins.sql
 
 
 #     # mapping tables between counties and states
