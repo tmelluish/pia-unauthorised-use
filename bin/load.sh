@@ -94,8 +94,9 @@ function loadRaw() {
     # INFO "parliamentary constituencies boundaries"
     # shp2pgsql -s 27700 -diI "${DATAPATH}/client_info/parliamentary_constituencies/Westminster_Parliamentary_Constituencies__December_2017__Boundaries_UK.shp" raw.constituencies | psql > /dev/null
     
-    # INFO "load postcode geometries"
-    # ogr2ogr -f "PostgreSQL" PG:"host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${DATAPATH}/postcode/f713157ef187437895133622db0fc3dd_0.geojson" -nln raw.postcode_centroid -append
+    INFO "load CF GIS geopackage"
+    ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_u  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
+    #-nln raw.postcode_centroid -append
     
     DEBUG set +o verbose;
     INFO "loadRaw Finished"
