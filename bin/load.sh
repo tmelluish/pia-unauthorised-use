@@ -94,9 +94,6 @@ function loadRaw() {
     # INFO "parliamentary constituencies boundaries"
     # shp2pgsql -s 27700 -diI "${DATAPATH}/client_info/parliamentary_constituencies/Westminster_Parliamentary_Constituencies__December_2017__Boundaries_UK.shp" raw.constituencies | psql > /dev/null
     
-    INFO "load CF GIS geopackage"
-    ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
-    #-nln raw.postcode_centroid -append
     
     DEBUG set +o verbose;
     INFO "loadRaw Finished"
@@ -130,7 +127,10 @@ function loadPublic() {
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_noi_manual.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_noi_manual.sql
 
-
+    INFO "load CF GIS geopackage"
+    ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
+    #-nln raw.postcode_centroid -append
+    
 
 #     # mapping tables between counties and states
 #     INFO "Loading county and state mapping code"
