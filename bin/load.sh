@@ -79,6 +79,10 @@ function loadRaw() {
      # CF NOI requests submitted manually
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_noi_manual.sql
     pgsql --command="\copy pia_raw.cf_noi_manual from '${PIA_DATAPATH}/SUN_NOIs_Old_Tracker.csv' WITH CSV HEADER"
+
+    # CF PN analysis
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_pn_analysis.sql
+    pgsql --command="\copy pia_raw.cf_noi_manual from '${PIA_DATAPATH}/PN_analysis.csv' WITH CSV HEADER"
   
     # INFO "Loading BDUK and Ofcom Markets"
     # pgsql --file=${PROJECTPATH}/sql/data_model/raw/bduk_f20_bins.sql
@@ -126,6 +130,12 @@ function loadPublic() {
     # NOI requests submitted manually
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_noi_manual.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_noi_manual.sql
+
+    # PN analysis
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_pn_analysis.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_pn_analysis.sql
+
+
 
     INFO "load CF GIS geopackage"
     ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
