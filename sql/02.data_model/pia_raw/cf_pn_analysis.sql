@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS pia_raw.pn_analysis;
+DROP TABLE IF EXISTS pia_raw.cf_pn_analysis;
 
-CREATE TABLE IF NOT EXISTS pia_raw.pn_analysis (
+CREATE TABLE IF NOT EXISTS pia_raw.cf_pn_analysis (
 
   "Region"                                   TEXT,
   "Zone"                                     TEXT,
