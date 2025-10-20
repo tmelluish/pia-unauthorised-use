@@ -1,7 +1,4 @@
 
--- Create table
-DROP TABLE IF EXISTS pia_raw.or_invoice ;
-
 insert into pia_ua.or_invoice (
   or_invoice_id, 
   "Charge type" ,
