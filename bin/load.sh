@@ -144,6 +144,14 @@ function loadPublic() {
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/or_invoice.sql
 
 
+    # clear out CF GIS tables before re-loading
+    pgsql --command="truncate table pia_ua.boundary" ;
+    pgsql --command="truncate table thirdparty.openreach_ducts" ;
+    pgsql --command="truncate table thirdparty.openreach_structure" ;
+    pgsql --command="truncate table pia_ua.chamber" ;
+    pgsql --command="truncate table pia_ua.trench" ;
+    pgsql --command="truncate table pia_ua.pole" ;
+
     INFO "load CF GIS geopackage"
     ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
     #-nln raw.postcode_centroid -append
