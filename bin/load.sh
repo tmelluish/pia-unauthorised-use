@@ -140,6 +140,12 @@ function loadPublic() {
     INFO "load CF GIS geopackage"
     ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
     #-nln raw.postcode_centroid -append
+    pgsl --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_structure_objectid ON thirdparty.openreach_structure (objectid);"
+    pgsl --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_duct_objectid ON thirdparty.openreach_ducts (objectid);"
+    pgsl --command="update pia_ua.pole set bt_objectid = trim(bt_objectid);"
+    pgsl --command="create index if not exists idx_pia_ua_pole_bt_objectid on pia_ua.pole (bt_objectid) ;"
+    pgsl --command="update pia_ua.trench set bt_objectid = trim(bt_objectid);"
+    pgsl --command="create index if not exists idx_pia_ua_trench_bt_objectid on pia_ua.trench (bt_objectid) ;"
     
 
 #     # mapping tables between counties and states
