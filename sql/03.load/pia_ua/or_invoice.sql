@@ -1,6 +1,6 @@
 
 insert into pia_ua.or_invoice (
-  or_invoice_id, 
+  
   "Charge type" ,
   "Product details",
   "Column1"        ,
@@ -29,7 +29,7 @@ insert into pia_ua.or_invoice (
   "Column24"          
 )
 select
-or_invoice_id, 
+
   "Charge type" ,
   "Product details",
   "Column1"        ,

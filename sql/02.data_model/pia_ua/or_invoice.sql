@@ -2,7 +2,7 @@
 DROP TABLE IF EXISTS pia_ua.or_invoice ;
 
 CREATE TABLE IF NOT EXISTS pia_ua.or_invoice (
-  or_invoice_id BIGSERIAL PRIMARY KEY,
+  --or_invoice_id BIGSERIAL PRIMARY KEY,
 
   "Charge type"           TEXT,
   "Product details"       TEXT,
