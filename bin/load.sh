@@ -86,7 +86,7 @@ function loadRaw() {
   
     # CF PN analysis
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/or_invoice.sql
-    pgsql --command="\copy pia_raw.or_invoice from '${PIA_DATAPATH}/cut_down_Openreach_Invoice_20250401.csv.csv' WITH CSV HEADER"
+    pgsql --command="\copy pia_raw.or_invoice from '${PIA_DATAPATH}/cut_down_Openreach_Invoice_20250401.csv' WITH CSV HEADER"
 
     # INFO "Loading BDUK and Ofcom Markets"
     # pgsql --file=${PROJECTPATH}/sql/data_model/raw/bduk_f20_bins.sql
