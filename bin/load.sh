@@ -84,6 +84,10 @@ function loadRaw() {
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/cf_pn_analysis.sql
     pgsql --command="\copy pia_raw.cf_pn_analysis from '${PIA_DATAPATH}/PN_analysis.csv' WITH CSV HEADER"
   
+    # CF PN analysis
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_raw/or_invoice.sql
+    pgsql --command="\copy pia_raw.or_invoice from '${PIA_DATAPATH}/cut_down_Openreach_Invoice_20250401.csv.csv' WITH CSV HEADER"
+
     # INFO "Loading BDUK and Ofcom Markets"
     # pgsql --file=${PROJECTPATH}/sql/data_model/raw/bduk_f20_bins.sql
     # pgsql --command="\copy raw.bduk_f20_bins from '${DATAPATH}/bduk_f20_data.csv' WITH CSV HEADER"
@@ -135,17 +139,20 @@ function loadPublic() {
     pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/cf_pn_analysis.sql
     pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/cf_pn_analysis.sql
 
+    # PN analysis
+    pgsql --file=${PIA_PROJECTPATH}/sql/02.data_model/pia_ua/or_invoice.sql
+    pgsql --file=${PIA_PROJECTPATH}/sql/03.load/pia_ua/or_invoice.sql
 
 
     INFO "load CF GIS geopackage"
     ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
     #-nln raw.postcode_centroid -append
-    pgsl --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_structure_objectid ON thirdparty.openreach_structure (objectid);"
-    pgsl --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_duct_objectid ON thirdparty.openreach_ducts (objectid);"
-    pgsl --command="update pia_ua.pole set bt_objectid = trim(bt_objectid);"
-    pgsl --command="create index if not exists idx_pia_ua_pole_bt_objectid on pia_ua.pole (bt_objectid) ;"
-    pgsl --command="update pia_ua.trench set bt_objectid = trim(bt_objectid);"
-    pgsl --command="create index if not exists idx_pia_ua_trench_bt_objectid on pia_ua.trench (bt_objectid) ;"
+    pgsql --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_structure_objectid ON thirdparty.openreach_structure (objectid);"
+    pgsql --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_duct_objectid ON thirdparty.openreach_ducts (objectid);"
+    pgsql --command="update pia_ua.pole set bt_objectid = trim(bt_objectid);"
+    pgsql --command="create index if not exists idx_pia_ua_pole_bt_objectid on pia_ua.pole (bt_objectid) ;"
+    pgsql --command="update pia_ua.trench set bt_objectid = trim(bt_objectid);"
+    pgsql --command="create index if not exists idx_pia_ua_trench_bt_objectid on pia_ua.trench (bt_objectid) ;"
     
 
 #     # mapping tables between counties and states
