@@ -146,7 +146,7 @@ function loadPublic() {
 
     # clear out CF GIS tables before re-loading
     pgsql --command="truncate table pia_ua.boundary" ;
-    pgsql --command="truncate table thirdparty.openreach_ducts" ;
+    pgsql --command="truncate table thirdparty.openreach_duct" ;
     pgsql --command="truncate table thirdparty.openreach_structure" ;
     pgsql --command="truncate table pia_ua.chamber" ;
     pgsql --command="truncate table pia_ua.trench" ;
