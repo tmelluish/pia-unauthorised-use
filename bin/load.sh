@@ -145,18 +145,20 @@ function loadPublic() {
 
 
     # clear out CF GIS tables before re-loading
-    pgsql --command="truncate table pia_ua.boundary" ;
-    pgsql --command="truncate table thirdparty.openreach_duct" ;
-    pgsql --command="truncate table thirdparty.openreach_structure" ;
-    pgsql --command="truncate table pia_ua.chamber" ;
-    pgsql --command="truncate table pia_ua.trench" ;
-    pgsql --command="truncate table pia_ua.pole" ;
+    pgsql --command="drop table if exists table pia_ua.boundary" ;
+    pgsql --command="drop table if exists table pia_ua.city_boundary" ;
+    pgsql --command="drop table if exists table thirdparty.openreach_duct" ;
+    pgsql --command="drop table if exists table thirdparty.openreach_structure" ;
+    pgsql --command="drop table if exists table pia_ua.chamber" ;
+    pgsql --command="drop table if exists table pia_ua.trench" ;
+    pgsql --command="drop table if exists table pia_ua.pole" ;
 
     INFO "load CF GIS geopackage"
-    ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
+    # ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
+    ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/GIS_export_v2.gpkg" 
     #-nln raw.postcode_centroid -append
     pgsql --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_structure_objectid ON thirdparty.openreach_structure (objectid);"
-    pgsql --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_duct_objectid ON thirdparty.openreach_ducts (objectid);"
+    pgsql --command="CREATE INDEX IF NOT EXISTS idx_thirdparty_or_duct_objectid ON thirdparty.openreach_duct (objectid);"
     pgsql --command="update pia_ua.pole set bt_objectid = trim(bt_objectid);"
     pgsql --command="create index if not exists idx_pia_ua_pole_bt_objectid on pia_ua.pole (bt_objectid) ;"
     pgsql --command="update pia_ua.trench set bt_objectid = trim(bt_objectid);"
