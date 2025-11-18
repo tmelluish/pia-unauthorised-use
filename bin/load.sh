@@ -145,13 +145,13 @@ function loadPublic() {
 
 
     # clear out CF GIS tables before re-loading
-    pgsql --command="drop table if exists table pia_ua.boundary" ;
-    pgsql --command="drop table if exists table pia_ua.city_boundary" ;
-    pgsql --command="drop table if exists table thirdparty.openreach_duct" ;
-    pgsql --command="drop table if exists table thirdparty.openreach_structure" ;
-    pgsql --command="drop table if exists table pia_ua.chamber" ;
-    pgsql --command="drop table if exists table pia_ua.trench" ;
-    pgsql --command="drop table if exists table pia_ua.pole" ;
+    pgsql --command="drop table if exists pia_ua.boundary" ;
+    pgsql --command="drop table if exists pia_ua.city_boundary" ;
+    pgsql --command="drop table if exists thirdparty.openreach_duct" ;
+    pgsql --command="drop table if exists thirdparty.openreach_structure" ;
+    pgsql --command="drop table if exists pia_ua.chamber" ;
+    pgsql --command="drop table if exists pia_ua.trench" ;
+    pgsql --command="drop table if exists pia_ua.pole" ;
 
     INFO "load CF GIS geopackage"
     # ogr2ogr -f "PostgreSQL" PG:"active_schema=pia_ua  host = ${PGHOST} dbname=${PGDATABASE} user=${PGUSER} port=${PGPORT} password=${PGPASSWORD}" "${PIA_DATAPATH}/SUN_trial_GIS_export.gpkg" 
